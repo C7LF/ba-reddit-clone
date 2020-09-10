@@ -1,7 +1,6 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { ObjectType, Field } from "type-graphql";
 
-// Post table
 @ObjectType()
 @Entity()
 export class User {
@@ -21,7 +20,6 @@ export class User {
   @Property({ type: "text", unique: true })
   username!: string;
 
-  // no field so password cannot
   @Property({ type: "text" })
   password!: string;
 }

@@ -1,6 +1,6 @@
 import { Resolver, Query, Ctx, Arg, Mutation } from "type-graphql";
 import { Post } from "../entities/Post";
-import { MyContext } from "src/types";
+import { MyContext } from "../types";
 
 @Resolver()
 export class PostResolver {
@@ -9,13 +9,11 @@ export class PostResolver {
     return em.find(Post, {});
   }
 
-  // Query is for getting data
   @Query(() => Post, { nullable: true })
   post(@Arg("id") id: number, @Ctx() { em }: MyContext): Promise<Post | null> {
     return em.findOne(Post, { id });
   }
 
-  // Mutation is for updating, inserting and deleting
   @Mutation(() => Post)
   async createPost(
     @Arg("title") title: string,
@@ -40,7 +38,6 @@ export class PostResolver {
       post.title = title;
       await em.persistAndFlush(post);
     }
-
     return post;
   }
 

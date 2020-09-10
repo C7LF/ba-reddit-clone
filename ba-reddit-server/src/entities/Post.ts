@@ -1,7 +1,6 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { ObjectType, Field } from "type-graphql";
 
-// Post table
 @ObjectType()
 @Entity()
 export class Post {
@@ -17,7 +16,7 @@ export class Post {
   @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt = new Date();
 
-  @Field() // Field property determines if the field should be exposed in the schema.
+  @Field()
   @Property({ type: "text" })
   title!: string;
 }

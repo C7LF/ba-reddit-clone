@@ -1,13 +1,14 @@
 import {
   Resolver,
   Mutation,
+  Arg,
   InputType,
   Field,
   Ctx,
-  Arg,
   ObjectType,
+  Query,
 } from "type-graphql";
-import { MyContext } from "src/types";
+import { MyContext } from "../types";
 import { User } from "../entities/User";
 import argon2 from "argon2";
 
@@ -23,7 +24,6 @@ class UsernamePasswordInput {
 class FieldError {
   @Field()
   field: string;
-
   @Field()
   message: string;
 }
@@ -39,28 +39,39 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
         errors: [
           {
             field: "username",
-            message: "length must be greater than 2 characters",
+            message: "length must be greater than 2",
           },
         ],
       };
     }
 
-    if (options.password.length <= 3) {
+    if (options.password.length <= 2) {
       return {
         errors: [
           {
             field: "password",
-            message: "length must be greater than 3 characters",
+            message: "length must be greater than 2",
           },
         ],
       };
@@ -71,27 +82,29 @@ export class UserResolver {
       username: options.username,
       password: hashedPassword,
     });
-
     try {
       await em.persistAndFlush(user);
     } catch (err) {
-      // Check for duplicate username
-      if (err.code === "23505" || err.detail.includes("already exists")) {
+      //|| err.detail.includes("already exists")) {
+      // duplicate username error
+      if (err.code === "23505") {
         return {
           errors: [
             {
               field: "username",
-              message: "username already exists",
+              message: "username already taken",
             },
           ],
         };
       }
     }
 
-    // Need to return user in object because of error handling
-    return {
-      user,
-    };
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id;
+
+    return { user };
   }
 
   @Mutation(() => UserResponse)
@@ -122,7 +135,7 @@ export class UserResolver {
       };
     }
 
-    req.session.userId = user.id // Store current user id in request session
+    req.session.userId = user.id;
 
     return {
       user,

@@ -6,12 +6,11 @@ import { User } from "./entities/User";
 
 export default {
   migrations: {
-    path: path.join(__dirname, "./migrations"), // path to the folder with migrations, absolute path with dirname.
-    pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files for both js and ts
+    path: path.join(__dirname, "./migrations"),
+    pattern: /^[\w-]+\d+\.[tj]s$/,
   },
   entities: [Post, User],
-  dbName: "ba-reddit",
+  dbName: "lireddit",
   type: "postgresql",
-  debug: !__prod__, // When not in production, set debug to true
+  debug: !__prod__,
 } as Parameters<typeof MikroORM.init>[0];
-// use MikroORM parameters to preserve type, allowing for suggested types (auto complete)
