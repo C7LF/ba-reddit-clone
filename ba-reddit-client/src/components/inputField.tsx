@@ -1,0 +1,30 @@
+import React, { InputHTMLAttributes } from "react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+} from "@chakra-ui/core";
+import { useField } from "formik";
+
+// set input field to take regular input type props.
+type inputField = InputHTMLAttributes<HTMLInputElement> & {
+  name: string;
+  label: string,
+  size: number
+};
+
+const InputField: React.FC<inputField> = ({label, size: _, ...props}) => {
+  const [field, { error }] = useField(props);
+
+  //   cast error to boolean with !!
+  return (
+    <FormControl isInvalid={!!error}>
+      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      <Input {...field} {...props} id={field.name} placeholder={props.placeholder} />
+      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+    </FormControl>
+  );
+};
+
+export default InputField;
