@@ -21,18 +21,12 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
-
-  const corsOptions = {
-    origin: "http://localhost:3000",
-    credentials: true
-  }
-  
-
-  // Fix cors error by using custom origin and true cred, apply on all routes with:
   app.use(
-    cors(corsOptions)
-  )
-
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
   app.use(
     session({
       name: "qid",
@@ -60,7 +54,10 @@ const main = async () => {
     context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
 
-  apolloServer.applyMiddleware({ app, cors: corsOptions });
+  apolloServer.applyMiddleware({
+    app,
+    path: "/graphql", cors: false
+  });
 
   app.listen(4000, () => {
     console.log("server started on localhost:4000");
