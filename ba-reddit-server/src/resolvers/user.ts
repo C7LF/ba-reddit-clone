@@ -135,6 +135,7 @@ export class UserResolver {
       };
     }
 
+    // Adds user id to session under key userId
     req.session.userId = user.id;
 
     return {
