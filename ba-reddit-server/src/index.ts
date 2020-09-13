@@ -56,7 +56,7 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    path: "/graphql", cors: false
+    cors: false,
   });
 
   app.listen(4000, () => {
