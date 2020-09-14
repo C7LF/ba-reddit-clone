@@ -9,27 +9,25 @@ import Wrapper from "../components/wrapper";
 import InputField from "../components/inputField";
 
 // Use custom mutatuion hook
-import { useRegisterMutation } from "../generated/graphql";
+import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 // Should generate hook for each mutation in the mutations folder
 
 import { useRouter } from "next/router";
 
-interface registerProps {}
-
-const register: React.FC<registerProps> = ({}) => {
+const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [, login] = useLoginMutation();
   return (
     <Wrapper>
       <Formik
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register(values);
-          if (response.data?.register.errors) {
+          const response = await login({options: values});
+          if (response.data?.login.errors) {
             // Errors from graphql
-            setErrors(toErrorMap(response.data.register.errors));
-          } else if (response.data?.register.user) {
+            setErrors(toErrorMap(response.data.login.errors));
+          } else if (response.data?.login.user) {
             router.push("/");
           }
         }}
@@ -55,7 +53,7 @@ const register: React.FC<registerProps> = ({}) => {
               type="submit"
               variantColor="purple"
             >
-              Register
+              Login
             </Button>
           </Form>
         )}
@@ -64,4 +62,4 @@ const register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default register;
+export default Login;
