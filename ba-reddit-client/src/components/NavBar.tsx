@@ -50,10 +50,14 @@ const NavBar = (props: any) => {
         flexGrow={1}
       ></Box>
 
-        {/* display username if logged in */}
-      <Box display={data?.me ? "block" : "none"}>
-        <p>{data?.me?.username}</p>
+      {/* display username if logged in */}
+      <Box display={data?.me ? "flex" : "none"}>
+        <MenuItems>{data?.me?.username}</MenuItems>
+        <Link>
+          <MenuItems>Logout</MenuItems>
+        </Link>
       </Box>
+      
       <Box
         display={{
           sm: show ? "block" : "none",
