@@ -1,15 +1,23 @@
 import React from "react";
 import { Box, Heading, Flex, Text, Button, Link } from "@chakra-ui/core";
 import NextLink from "next/link";
-import { useMeQuery } from "../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import register from "../pages/register";
+import { useMutation } from "urql";
 
-const MenuItems = ({ children }) => (
-  <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
+interface MenuItems {
+  children: any,
+  onClick?: () => void
+}
+
+const MenuItems = ({ children, onClick }: MenuItems) => (
+  <Text onClick={onClick} mt={{ base: 4, md: 0 }} mr={6} display="block">
     {children}
   </Text>
 );
 
 const NavBar = (props: any) => {
+  const [{fetching: logoutFetching}, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery();
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
@@ -54,15 +62,15 @@ const NavBar = (props: any) => {
       <Box display={data?.me ? "flex" : "none"}>
         <MenuItems>{data?.me?.username}</MenuItems>
         <Link>
-          <MenuItems>Logout</MenuItems>
+          <MenuItems onClick={() => logout()}>Logout</MenuItems>
         </Link>
       </Box>
-      
+
       <Box
         display={{
           sm: show ? "block" : "none",
           md: "flex",
-          base: data?.me ? "none" : "flex",
+          base: data?.me || fetching ? "none" : "flex",
         }}
         mt={{ base: 4, md: 0 }}
         alignItems="center"

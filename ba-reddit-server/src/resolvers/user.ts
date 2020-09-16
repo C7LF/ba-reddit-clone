@@ -13,6 +13,7 @@ import { User } from "../entities/User";
 import argon2 from "argon2";
 
 import { EntityManager } from "@mikro-orm/postgresql";
+import { COOKIE_NAME } from "../constants";
 
 @InputType()
 class UsernamePasswordInput {
@@ -83,13 +84,17 @@ export class UserResolver {
     let user;
     try {
       // User query builder rather than ORM.
-      const result = await (em as EntityManager).createQueryBuilder(User).getKnexQuery().insert({
-        username: options.username,
-        password: hashedPassword,
-        created_at: new Date(),
-        updated_at: new Date(),
-      }).returning("*");
-      user = result[0]
+      const result = await (em as EntityManager)
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert({
+          username: options.username,
+          password: hashedPassword,
+          created_at: new Date(),
+          updated_at: new Date(),
+        })
+        .returning("*");
+      user = result[0];
     } catch (err) {
       //|| err.detail.includes("already exists")) {
       // duplicate username error
@@ -146,5 +151,29 @@ export class UserResolver {
     return {
       user,
     };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    // Remove session from redis
+
+    // Because session.destry is a callback function we can wait for the destroy
+    // to resolve, by returning a promise.
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+
+        // clear the cookie no matter what.
+        res.clearCookie(COOKIE_NAME)
+
+        // if there's a problem destroying the session.
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      })
+    );
   }
 }

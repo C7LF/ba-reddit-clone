@@ -1,10 +1,16 @@
 import { ThemeProvider, CSSReset, ColorModeProvider } from "@chakra-ui/core";
 import { createClient, dedupExchange, fetchExchange, Provider } from "urql";
-import { cacheExchange, Cache, QueryInput } from "@urql/exchange-graphcache";
+import {
+  cacheExchange,
+  Cache,
+  QueryInput,
+  query,
+} from "@urql/exchange-graphcache";
 
 import theme from "../theme";
 import {
   LoginMutation,
+  LogoutMutation,
   MeDocument,
   MeQuery,
   Query,
@@ -30,6 +36,16 @@ const client = createClient({
     cacheExchange({
       updates: {
         Mutation: {
+          logout: (_result, args, cache, info) => {
+            betterUpdateQuery<LogoutMutation, MeQuery>(
+              cache,
+              { query: MeDocument },
+              _result,
+              () => ({
+                me: null,
+              })
+            );
+          },
           // every time login mutation runs the me query cache is cleared and updated with username.
           login: (_result, args, cache, info) => {
             betterUpdateQuery<LoginMutation, MeQuery>(
@@ -47,7 +63,7 @@ const client = createClient({
               }
             );
           },
-
+          // same cache updating process for register mutation
           register: (_result, args, cache, info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(
               cache,
