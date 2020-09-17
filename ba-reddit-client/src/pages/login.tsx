@@ -14,6 +14,8 @@ import { toErrorMap } from "../utils/toErrorMap";
 // Should generate hook for each mutation in the mutations folder
 
 import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -62,4 +64,6 @@ const Login: React.FC<{}> = ({}) => {
   );
 };
 
-export default Login;
+// disable server side rendering for static, un-important pages such as login
+// withUrqlClient is needed to call the mutation
+export default withUrqlClient(createUrqlClient, {ssr: false})(Login);

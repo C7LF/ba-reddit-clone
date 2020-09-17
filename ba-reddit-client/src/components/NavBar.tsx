@@ -2,8 +2,7 @@ import React from "react";
 import { Box, Heading, Flex, Text, Button, Link } from "@chakra-ui/core";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import register from "../pages/register";
-import { useMutation } from "urql";
+import { isServer } from "../utils/isServer";
 
 interface MenuItems {
   children: any,
@@ -17,8 +16,11 @@ const MenuItems = ({ children, onClick }: MenuItems) => (
 );
 
 const NavBar = (props: any) => {
-  const [{fetching: logoutFetching}, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery();
+  const [, logout] = useLogoutMutation();
+  const [{ data, fetching }] = useMeQuery({
+    // stop quering if on the server, but run on the client, prevent unnecessary requests
+    pause: isServer(),
+  });
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 

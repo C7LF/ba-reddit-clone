@@ -14,6 +14,8 @@ import { toErrorMap } from "../utils/toErrorMap";
 // Should generate hook for each mutation in the mutations folder
 
 import { useRouter } from "next/router";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
 
 interface registerProps {}
 
@@ -64,4 +66,4 @@ const register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default register;
+export default withUrqlClient(createUrqlClient)(register);
