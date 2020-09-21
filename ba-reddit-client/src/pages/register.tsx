@@ -1,9 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import {
-  Box,
-  Button,
-} from "@chakra-ui/core";
+import { Box, Button } from "@chakra-ui/core";
 
 import Wrapper from "../components/wrapper";
 import InputField from "../components/inputField";
@@ -25,9 +22,9 @@ const register: React.FC<registerProps> = ({}) => {
   return (
     <Wrapper>
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ email: "", username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register(values);
+          const response = await register({ options: values });
           if (response.data?.register.errors) {
             // Errors from graphql
             setErrors(toErrorMap(response.data.register.errors));
@@ -43,6 +40,9 @@ const register: React.FC<registerProps> = ({}) => {
               placeholder="Username"
               label="Username"
             />
+            <Box mt={5}>
+              <InputField name="email" placeholder="Email" label="Email" />
+            </Box>
             <Box mt={5}>
               <InputField
                 name="password"
