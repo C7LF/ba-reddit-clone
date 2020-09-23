@@ -9,6 +9,7 @@ import Wrapper from "../../components/wrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorMap } from "../../utils/toErrorMap";
+import NextLink from "next/link"
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
   const router = useRouter();
@@ -47,6 +48,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             {tokenError && (
               <Box color="red" mt={5}>
                 {tokenError}
+                <NextLink href="/forgot-password">Forgot Password?</NextLink>
               </Box>
             )}
             {/* <Box mt={5}>

@@ -1,9 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import {
-  Box,
-  Button,
-} from "@chakra-ui/core";
+import { Box, Button } from "@chakra-ui/core";
 
 import Wrapper from "../components/wrapper";
 import InputField from "../components/inputField";
@@ -16,6 +13,7 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import NextLink from "next/link"
 
 const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -49,6 +47,7 @@ const Login: React.FC<{}> = ({}) => {
                 type="password"
               />
             </Box>
+            <NextLink href="/forgot-password">Forgot Password?</NextLink><br />
             <Button
               mt={5}
               isLoading={isSubmitting}
@@ -66,4 +65,4 @@ const Login: React.FC<{}> = ({}) => {
 
 // disable server side rendering for static, un-important pages such as login
 // withUrqlClient is needed to call the mutation
-export default withUrqlClient(createUrqlClient, {ssr: false})(Login);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Login);

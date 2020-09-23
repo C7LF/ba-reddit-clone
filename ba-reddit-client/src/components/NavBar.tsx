@@ -72,7 +72,7 @@ const NavBar = (props: any) => {
         display={{
           sm: show ? "block" : "none",
           md: "flex",
-          base: data?.me || fetching ? "none" : "flex",
+          base: (data?.me) ? "none" : "flex",
         }}
         mt={{ base: 4, md: 0 }}
         alignItems="center"
