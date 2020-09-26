@@ -22,8 +22,9 @@ const main = async () => {
     password: "postgres",
     logging: true,
     synchronize: true,
-    entities: [Post, User]
+    entities: [Post, User],
   });
+
 
   const app = express();
 
