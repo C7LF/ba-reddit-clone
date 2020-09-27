@@ -1,17 +1,19 @@
 import React from "react";
-import NavBar from "../components/NavBar";
-
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
-import { Spinner } from "@chakra-ui/core";
+import { Heading, Link, Spinner } from "@chakra-ui/core";
+import { Layout } from "../components/Layout";
+import NextLink from "next/link";
 
 const Index = () => {
   const [{ data }] = usePostsQuery();
   return (
-    <>
-      <NavBar />
-      <div>Hello!</div>
+    <Layout varient="regular">
+      <Heading>Hello!</Heading>
+      <NextLink href="/create-post">
+        <Link>Create Post</Link>
+      </NextLink>
       <br />
       {!data ? (
         <Spinner />
@@ -22,7 +24,7 @@ const Index = () => {
           </div>
         ))
       )}
-    </>
+    </Layout>
   );
 };
 
