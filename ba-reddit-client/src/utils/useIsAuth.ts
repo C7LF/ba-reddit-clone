@@ -9,7 +9,8 @@ export const useIsAuth = () => {
   // If not logged in redirect user to login page
   useEffect(() => {
     if (!fetching && !data?.me) {
-      router.replace("/login");
+      // store query parameter in URL
+      router.replace("/login?next=" + router.pathname);
     }
   }, [data, router, fetching]);
 };

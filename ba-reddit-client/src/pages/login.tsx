@@ -13,7 +13,7 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import NextLink from "next/link"
+import NextLink from "next/link";
 
 const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -28,7 +28,11 @@ const Login: React.FC<{}> = ({}) => {
             // Errors from graphql
             setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
-            router.push("/");
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next);
+            } else {
+              router.push("");
+            }
           }
         }}
       >
@@ -47,7 +51,8 @@ const Login: React.FC<{}> = ({}) => {
                 type="password"
               />
             </Box>
-            <NextLink href="/forgot-password">Forgot Password?</NextLink><br />
+            <NextLink href="/forgot-password">Forgot Password?</NextLink>
+            <br />
             <Button
               mt={5}
               isLoading={isSubmitting}
