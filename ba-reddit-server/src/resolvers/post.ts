@@ -9,7 +9,9 @@ import {
   Field,
   Ctx,
   UseMiddleware,
-  Int,, FieldResolver, Root
+  Int,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
@@ -24,11 +26,9 @@ class PostInput {
 
 @Resolver(Post)
 export class PostResolver {
-  @FieldResolver(() => String) 
-  contentSnippet(
-    @Root() root: Post
-  ){
-    return root.content.slice(0, 100) + "..."
+  @FieldResolver(() => String)
+  contentSnippet(@Root() root: Post) {
+    return root.content.slice(0, 100) + "...";
   }
 
   @Query(() => [Post])
