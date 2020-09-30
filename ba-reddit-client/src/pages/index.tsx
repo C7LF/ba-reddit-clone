@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
@@ -16,14 +16,13 @@ import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 
 const Index = () => {
+  const [variables, setVariables] = useState({ limit: 10, cursor: null as null | string });
   const [{ data, fetching }] = usePostsQuery({
-    variables: {
-      limit: 10,
-    },
+    variables,
   });
 
-  if(!fetching && !data) {
-    return <div>Error, no posts loaded</div>
+  if (!fetching && !data) {
+    return <div>Error, no posts loaded</div>;
   }
 
   return (
@@ -53,7 +52,18 @@ const Index = () => {
       )}
       {data && (
         <Flex>
-          <Button isLoading={fetching} m="auto" variantColor="teal" my={10}>
+          <Button
+            onClick={() => {
+              setVariables({
+                limit: variables.limit,
+                cursor: data.posts[data.posts.length - 1].createdAt,
+              });
+            }}
+            isLoading={fetching}
+            m="auto"
+            variantColor="teal"
+            my={10}
+          >
             Load More
           </Button>
         </Flex>
