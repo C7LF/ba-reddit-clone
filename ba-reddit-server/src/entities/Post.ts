@@ -31,11 +31,12 @@ export class Post extends BaseEntity {
 
   @Field()
   @Column()
-  creatorId: number
+  creatorId: number;
 
   // setup forign key to user table
-  @ManyToOne(() => User, user => user.posts)
-  origialPoster: User;
+  @Field()
+  @ManyToOne(() => User, (user) => user.posts)
+  creator: User;
 
   @Field(() => String)
   @CreateDateColumn()
