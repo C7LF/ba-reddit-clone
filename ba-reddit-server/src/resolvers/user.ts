@@ -37,7 +37,7 @@ class UserResponse {
   user?: User;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
   // Prevent user from seeing email if it isn't their own.
   @FieldResolver(() => String)
