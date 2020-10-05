@@ -51,19 +51,25 @@ export class PostResolver {
     const isUpvote = value !== -1;
     const realValue = isUpvote ? 1 : -1;
     const { userId } = req.session;
-    await Upvote.insert({
-      userId,
-      postId,
-      value: realValue,
-    });
+    // await Upvote.insert({
+    //   userId,
+    //   postId,
+    //   value: realValue,
+    // });
 
     await getConnection().query(
       `
+      START TRANSACTION;
+
+      INSERT INTO upvote("userId", "postId", value)
+      values(${userId},${postId},${realValue});
+
       UPDATE post
-      SET post.points = post.points + $1
-      WHERE post.id = $2
-    `,
-      [realValue, postId]
+      SET points = points + ${realValue}
+      WHERE id = ${postId};
+
+      COMMIT
+    `
     );
 
     return true;
@@ -115,7 +121,7 @@ export class PostResolver {
     //   });
     // }
 
-    console.log("posts: ", posts);
+    // console.log("posts: ", posts);
     // const posts = await qb.getMany();
 
     return {

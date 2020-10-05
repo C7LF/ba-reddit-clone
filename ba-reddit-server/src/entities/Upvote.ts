@@ -13,26 +13,20 @@ import { User } from "./User";
 // user <-> posts
 // user -> upvotes <- posts
 
-@ObjectType()
 @Entity()
 export class Upvote extends BaseEntity {
-  @Field()
   @Column({ type: "int" })
   value: number;
 
-  @Field()
   @PrimaryColumn()
-  userId!: string;
+  userId!: number;
 
-  @Field(() => User)
   @ManyToOne(() => User, (user) => user.upvotes)
   user: User;
 
-  @Field()
   @PrimaryColumn()
   postId: number;
 
-  @Field()
   @ManyToOne(() => Post, (post) => post.upvotes)
-  post: User;
+  post: Post;
 }
