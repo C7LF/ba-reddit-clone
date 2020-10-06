@@ -16,7 +16,10 @@ import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 
 const Index = () => {
-  const [variables, setVariables] = useState({ limit: 10, cursor: null as null | string });
+  const [variables, setVariables] = useState({
+    limit: 15,
+    cursor: null as null | string,
+  });
   const [{ data, fetching }] = usePostsQuery({
     variables,
   });
@@ -45,18 +48,25 @@ const Index = () => {
           {data!.posts.posts.map((post) => (
             <Box key={post.id} p={5} shadow="md" borderWidth="1px">
               <Heading fontSize="xl">{post.title}</Heading>
+              <Text
+                color="gray.500"
+                fontWeight="light"
+                letterSpacing="wide"
+              >
+                {post.creator.username}
+              </Text>
               <Text mt={4}>{post.contentSnippet}</Text>
             </Box>
           ))}
         </Stack>
       )}
-      {(data && data.posts.hasMore) && (
+      {data && data.posts.hasMore && (
         <Flex>
           <Button
             onClick={() => {
               setVariables({
                 limit: variables.limit,
-                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt
+                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
               });
             }}
             isLoading={fetching}
