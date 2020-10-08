@@ -155,7 +155,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
             );
             // Loop through each of the paginated queries and invalidate all.
             fieldInfos.forEach((fi) => {
-              cache.invalidate("Query", "posts", fi.arguments);
+              cache.invalidate("Query", "posts", fi.arguments || {});
             });
           },
           logout: (_result, args, cache, info) => {

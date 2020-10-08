@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { usePostsQuery } from "../generated/graphql";
+import { usePostsQuery, useVoteMutation } from "../generated/graphql";
 import {
   Box,
   Button,
   Flex,
   Heading,
+  Icon,
+  IconButton,
   Link,
   Spinner,
   Stack,
@@ -16,6 +18,8 @@ import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 
 const Index = () => {
+  const [, vote] = useVoteMutation();
+
   const [variables, setVariables] = useState({
     limit: 15,
     cursor: null as null | string,
@@ -46,17 +50,37 @@ const Index = () => {
       ) : (
         <Stack spacing={8}>
           {data!.posts.posts.map((post) => (
-            <Box key={post.id} p={5} shadow="md" borderWidth="1px">
-              <Heading fontSize="xl">{post.title}</Heading>
-              <Text
-                color="gray.500"
-                fontWeight="light"
-                letterSpacing="wide"
+            <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
+              <Flex
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+                pr={5}
               >
-                {post.creator.username}
-              </Text>
-              <Text mt={4}>{post.contentSnippet}</Text>
-            </Box>
+                <IconButton
+                  onClick={async () => {
+                    await vote({ postId: post.id, value: 1 });
+                  }}
+                  icon="chevron-up"
+                  aria-label="upvote"
+                />
+                {post.points}
+                <IconButton
+                  onClick={async () => {
+                    await vote({ postId: post.id, value: -1 });
+                  }}
+                  icon="chevron-down"
+                  aria-label="downvote"
+                />
+              </Flex>
+              <Box>
+                <Heading fontSize="xl">{post.title}</Heading>
+                <Text color="gray.500" fontWeight="light" letterSpacing="wide">
+                  {post.creator.username}
+                </Text>
+                <Text mt={4}>{post.contentSnippet}</Text>
+              </Box>
+            </Flex>
           ))}
         </Stack>
       )}
