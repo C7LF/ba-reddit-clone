@@ -103,7 +103,7 @@ export class PostResolver {
   async posts(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
-    @Ctx() {req}: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<PaginatedPosts> {
     // Pagination
     // Limit take to 50
@@ -112,15 +112,15 @@ export class PostResolver {
 
     const replacements: any[] = [realLimitPlusOne];
 
-    if(req.session.userId) {
-      replacements.push(req.session.userId)
+    if (req.session.userId) {
+      replacements.push(req.session.userId);
     }
 
     let cursorIndex = 3;
-    
+
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
-      cursorIndex = replacements.length
+      cursorIndex = replacements.length;
     }
 
     const posts = await getConnection().query(
@@ -131,9 +131,11 @@ export class PostResolver {
         'username', u.username,
         'email', u.email
         ) creator,
-      ${req.session.userId 
-        ? '(SELECT value FROM upvote WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"' 
-        : 'null as "voteStatus"'}
+      ${
+        req.session.userId
+          ? '(SELECT value FROM upvote WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+          : 'null as "voteStatus"'
+      }
       from post p
       inner join public.user u on u.id = p."creatorId"
       ${cursor ? `where p."createdAt" < $${cursorIndex}` : ""}
@@ -167,7 +169,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {
-    return Post.findOne(id);
+    return Post.findOne(id, { relations: ["creator"] });
   }
 
   @Mutation(() => Post)
