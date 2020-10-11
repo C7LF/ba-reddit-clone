@@ -17,10 +17,10 @@ const MenuItems = ({ children, onClick }: MenuItems) => (
 
 const NavBar = (props: any) => {
   const [, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery(
+  const [{ data, fetching }] = useMeQuery({
     // stop quering if on the server, but run on the client, prevent unnecessary requests
-    //pause: isServer(),
-  );
+    pause: isServer()
+  });
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
