@@ -59,18 +59,26 @@ const Index = () => {
               >
                 <IconButton
                   onClick={async () => {
+                    if (post.voteStatus === 1) {
+                      return;
+                    }
                     await vote({ postId: post.id, value: 1 });
                   }}
                   icon="chevron-up"
                   aria-label="upvote"
+                  variantColor={post.voteStatus === 1 ? "teal" : undefined}
                 />
                 {post.points}
                 <IconButton
                   onClick={async () => {
+                    if (post.voteStatus === -1) {
+                      return;
+                    }
                     await vote({ postId: post.id, value: -1 });
                   }}
                   icon="chevron-down"
                   aria-label="downvote"
+                  variantColor={post.voteStatus === -1 ? "red" : undefined}
                 />
               </Flex>
               <Box>
