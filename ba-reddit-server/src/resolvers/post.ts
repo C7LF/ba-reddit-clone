@@ -169,6 +169,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {
+    // Call the many to one creator field relation
     return Post.findOne(id, { relations: ["creator"] });
   }
 

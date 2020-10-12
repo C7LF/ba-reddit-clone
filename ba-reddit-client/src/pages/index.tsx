@@ -82,7 +82,11 @@ const Index = () => {
                 />
               </Flex>
               <Box>
-                <Heading fontSize="xl">{post.title}</Heading>
+                <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+                  <Link>
+                    <Heading fontSize="xl">{post.title}</Heading>
+                  </Link>
+                </NextLink>
                 <Text color="gray.500" fontWeight="light" letterSpacing="wide">
                   {post.creator.username}
                 </Text>
