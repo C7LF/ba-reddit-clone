@@ -17,7 +17,6 @@ export const Post = ({}) => {
       id: intId,
     },
   });
-  const [, deletePost] = useDeletePostMutation();
   if (fetching) {
     return <Layout varient="regular">Loading...</Layout>;
   }
@@ -33,16 +32,6 @@ export const Post = ({}) => {
       </Text>
       <Heading mb={5}>{data.post.title}</Heading>
       <p>{data.post.content}</p>
-      <Divider />
-      <IconButton
-        icon="delete"
-        aria-label="delete post"
-        color="darkred"
-        onClick={() => {
-          // @ts-ignore
-          deletePost({ id: data.post?.id });
-        }}
-      ></IconButton>
     </Layout>
   );
 };

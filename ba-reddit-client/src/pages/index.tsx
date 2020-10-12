@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { usePostsQuery, useVoteMutation } from "../generated/graphql";
+import { useDeletePostMutation, usePostsQuery, useVoteMutation } from "../generated/graphql";
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ import NextLink from "next/link";
 
 const Index = () => {
   const [, vote] = useVoteMutation();
+  const [, deletePost] = useDeletePostMutation();
 
   const [variables, setVariables] = useState({
     limit: 15,
@@ -91,6 +92,14 @@ const Index = () => {
                   {post.creator.username}
                 </Text>
                 <Text mt={4}>{post.contentSnippet}</Text>
+                <IconButton
+                  icon="delete"
+                  aria-label="delete post"
+                  color="darkred"
+                  onClick={() => {
+                    deletePost({ id: post.id });
+                  }}
+                ></IconButton>
               </Box>
             </Flex>
           ))}
