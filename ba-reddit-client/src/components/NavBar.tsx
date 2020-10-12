@@ -5,8 +5,8 @@ import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 
 interface MenuItems {
-  children: any,
-  onClick?: () => void
+  children: any;
+  onClick?: () => void;
 }
 
 const MenuItems = ({ children, onClick }: MenuItems) => (
@@ -19,7 +19,7 @@ const NavBar = (props: any) => {
   const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     // stop quering if on the server, but run on the client, prevent unnecessary requests
-    pause: isServer()
+    pause: isServer(),
   });
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
@@ -37,7 +37,9 @@ const NavBar = (props: any) => {
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-          LiReddit
+          <NextLink href="/">
+            <Link>LiReddit</Link>
+          </NextLink>
         </Heading>
       </Flex>
 
@@ -72,7 +74,7 @@ const NavBar = (props: any) => {
         display={{
           sm: show ? "block" : "none",
           md: "flex",
-          base: (data?.me) ? "none" : "flex",
+          base: data?.me ? "none" : "flex",
         }}
         mt={{ base: 4, md: 0 }}
         alignItems="center"

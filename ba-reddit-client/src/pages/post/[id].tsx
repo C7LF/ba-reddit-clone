@@ -1,3 +1,4 @@
+import { Breadcrumb, Divider, Heading } from "@chakra-ui/core";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
@@ -20,7 +21,16 @@ export const Post = ({}) => {
     return <Layout varient="regular">Loading...</Layout>;
   }
 
-  return <Layout varient="regular">{data?.post?.title}</Layout>;
+  if(!data?.post) {
+    return <Layout varient="regular">Could not find post</Layout>
+  }
+
+  return (
+    <Layout varient="regular">
+      <Heading mb={5}>{data.post.title}</Heading>
+      <p>{data.post.content}</p>
+    </Layout>
+  )
 };
 
 export default withUrqlClient(createUrqlClient, { ssr: true })(Post);
