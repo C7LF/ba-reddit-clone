@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { useDeletePostMutation, usePostsQuery, useVoteMutation } from "../generated/graphql";
+import {
+  useDeletePostMutation,
+  usePostsQuery,
+  useVoteMutation,
+} from "../generated/graphql";
 import {
   Box,
   Button,
@@ -82,24 +86,27 @@ const Index = () => {
                   variantColor={post.voteStatus === -1 ? "red" : undefined}
                 />
               </Flex>
-              <Box>
-                <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-                  <Link>
-                    <Heading fontSize="xl">{post.title}</Heading>
-                  </Link>
-                </NextLink>
+              <Box width="100%">
+                <Flex alignItems="center">
+                  <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+                    <Link>
+                      <Heading fontSize="xl">{post.title}</Heading>
+                    </Link>
+                  </NextLink>
+                  <IconButton
+                    ml="auto"
+                    icon="delete"
+                    aria-label="delete post"
+                    color="darkred"
+                    onClick={() => {
+                      deletePost({ id: post.id });
+                    }}
+                  ></IconButton>
+                </Flex>
                 <Text color="gray.500" fontWeight="light" letterSpacing="wide">
                   {post.creator.username}
                 </Text>
                 <Text mt={4}>{post.contentSnippet}</Text>
-                <IconButton
-                  icon="delete"
-                  aria-label="delete post"
-                  color="darkred"
-                  onClick={() => {
-                    deletePost({ id: post.id });
-                  }}
-                ></IconButton>
               </Box>
             </Flex>
           ))}
