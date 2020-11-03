@@ -54,62 +54,68 @@ const Index = () => {
         <Spinner />
       ) : (
         <Stack spacing={8}>
-          {data!.posts.posts.map((post) => (
-            <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
-              <Flex
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                pr={5}
-              >
-                <IconButton
-                  onClick={async () => {
-                    if (post.voteStatus === 1) {
-                      return;
-                    }
-                    await vote({ postId: post.id, value: 1 });
-                  }}
-                  icon="chevron-up"
-                  aria-label="upvote"
-                  variantColor={post.voteStatus === 1 ? "teal" : undefined}
-                />
-                {post.points}
-                <IconButton
-                  onClick={async () => {
-                    if (post.voteStatus === -1) {
-                      return;
-                    }
-                    await vote({ postId: post.id, value: -1 });
-                  }}
-                  icon="chevron-down"
-                  aria-label="downvote"
-                  variantColor={post.voteStatus === -1 ? "red" : undefined}
-                />
-              </Flex>
-              <Box width="100%">
-                <Flex alignItems="center">
-                  <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-                    <Link>
-                      <Heading fontSize="xl">{post.title}</Heading>
-                    </Link>
-                  </NextLink>
+          {data!.posts.posts.map((post) =>
+            !post ? null : (
+              <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
+                <Flex
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  pr={5}
+                >
                   <IconButton
-                    ml="auto"
-                    icon="delete"
-                    aria-label="delete post"
-                    color="darkred"
-                    onClick={() => {
-                      deletePost({ id: post.id });
+                    onClick={async () => {
+                      if (post.voteStatus === 1) {
+                        return;
+                      }
+                      await vote({ postId: post.id, value: 1 });
                     }}
-                  ></IconButton>
+                    icon="chevron-up"
+                    aria-label="upvote"
+                    variantColor={post.voteStatus === 1 ? "teal" : undefined}
+                  />
+                  {post.points}
+                  <IconButton
+                    onClick={async () => {
+                      if (post.voteStatus === -1) {
+                        return;
+                      }
+                      await vote({ postId: post.id, value: -1 });
+                    }}
+                    icon="chevron-down"
+                    aria-label="downvote"
+                    variantColor={post.voteStatus === -1 ? "red" : undefined}
+                  />
                 </Flex>
-                <Text color="gray.500" fontWeight="light" letterSpacing="wide">
-                  {post.creator.username}
-                </Text>
-                <Text mt={4}>{post.contentSnippet}</Text>
-              </Box>
-            </Flex>
-          ))}
+                <Box width="100%">
+                  <Flex alignItems="center">
+                    <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+                      <Link>
+                        <Heading fontSize="xl">{post.title}</Heading>
+                      </Link>
+                    </NextLink>
+                    <IconButton
+                      ml="auto"
+                      icon="delete"
+                      aria-label="delete post"
+                      color="darkred"
+                      onClick={() => {
+                        deletePost({ id: post.id });
+                      }}
+                    ></IconButton>
+                  </Flex>
+                  <Text
+                    color="gray.500"
+                    fontWeight="light"
+                    letterSpacing="wide"
+                  >
+                    {post.creator.username}
+                  </Text>
+                  <Text mt={4}>{post.contentSnippet}</Text>
+                </Box>
+              </Flex>
+            )
+          )}
         </Stack>
       )}
       {data && data.posts.hasMore && (
