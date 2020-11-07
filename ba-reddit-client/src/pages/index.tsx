@@ -3,6 +3,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import {
   useDeletePostMutation,
+  useMeQuery,
   usePostsQuery,
   useVoteMutation,
 } from "../generated/graphql";
@@ -29,6 +30,8 @@ const Index = () => {
     limit: 15,
     cursor: null as null | string,
   });
+
+  const [{ data: meData }] = useMeQuery();
   const [{ data, fetching }] = usePostsQuery({
     variables,
   });
@@ -94,7 +97,7 @@ const Index = () => {
                         <Heading fontSize="xl">{post.title}</Heading>
                       </Link>
                     </NextLink>
-                    <Box ml="auto">
+                    { meData?.me?.id === post.creator.id && <Box ml="auto">
                       <NextLink
                         href="/post/edit/[id]"
                         as={`/post/edit/${post.id}`}
@@ -114,7 +117,7 @@ const Index = () => {
                           deletePost({ id: post.id });
                         }}
                       ></IconButton>
-                    </Box>
+                    </Box>}
                   </Flex>
                   <Text
                     color="gray.500"
