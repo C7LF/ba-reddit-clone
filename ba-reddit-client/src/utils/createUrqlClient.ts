@@ -138,7 +138,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   // can only access context req on Next.js server:
   if (isServer()) {
-    cookie = ctx.req.headers.cookie;
+    cookie = ctx?.req?.headers?.cookie;
   }
   return {
     url: "http://localhost:4000/graphql",

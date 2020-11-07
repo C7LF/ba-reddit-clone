@@ -1,22 +1,12 @@
 import { Divider, Heading, IconButton, Text } from "@chakra-ui/core";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
 import React from "react";
 import { Layout } from "../../components/Layout";
-import { useDeletePostMutation, usePostQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 
 export const Post = ({}) => {
-  const router = useRouter();
-  const intId =
-    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-  const [{ data, fetching }] = usePostQuery({
-    // If query is invalid, then don't bother execting the query (using pause)
-    pause: intId === -1,
-    variables: {
-      id: intId,
-    },
-  });
+  const [{ data, error, fetching }] = useGetPostFromUrl()
   if (fetching) {
     return <Layout varient="regular">Loading...</Layout>;
   }
