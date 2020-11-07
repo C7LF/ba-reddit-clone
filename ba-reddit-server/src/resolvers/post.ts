@@ -186,19 +186,25 @@ export class PostResolver {
   }
 
   @Mutation(() => Post, { nullable: true })
+  @UseMiddleware(isAuth)
   async updatePost(
     @Arg("id") id: number,
     @Arg("title") title: string,
-    @Arg("content") content: string
+    @Arg("content") content: string,
+    @Ctx() { req }: MyContext
   ): Promise<Post | null> {
-    const post = await Post.findOne(id);
-    if (!post) {
-      return null;
-    }
-    if (typeof title !== "undefined") {
-      Post.update({ id }, { title, content });
-    }
-    return post;
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Post)
+      .set({ title, content })
+      .where('id = :id and "creatorId" = :creatorId', {
+        id,
+        creatorId: req.session.userId,
+      })
+      .returning("*")
+      .execute();
+
+    return result.raw[0];
   }
 
   @Mutation(() => Boolean)
@@ -214,7 +220,7 @@ export class PostResolver {
     if (post.creatorId !== req.session.userId) {
       throw new Error("not authorised");
     }
-    // If post has upvotes remove posts from 
+    // If post has upvotes remove posts from
     await Upvote.delete({ postId: id });
     // can only delete posts that the user owns.
 
