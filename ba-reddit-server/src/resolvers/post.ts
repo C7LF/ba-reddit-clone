@@ -188,7 +188,7 @@ export class PostResolver {
   @Mutation(() => Post, { nullable: true })
   async updatePost(
     @Arg("id") id: number,
-    @Arg("title") title: string
+    @Arg("title") title: string,
     @Arg("content") content: string
   ): Promise<Post | null> {
     const post = await Post.findOne(id);
