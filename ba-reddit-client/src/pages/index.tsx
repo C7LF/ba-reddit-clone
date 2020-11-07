@@ -94,15 +94,27 @@ const Index = () => {
                         <Heading fontSize="xl">{post.title}</Heading>
                       </Link>
                     </NextLink>
-                    <IconButton
-                      ml="auto"
-                      icon="delete"
-                      aria-label="delete post"
-                      color="darkred"
-                      onClick={() => {
-                        deletePost({ id: post.id });
-                      }}
-                    ></IconButton>
+                    <Box ml="auto">
+                      <NextLink
+                        href="/post/edit/[id]"
+                        as={`/post/edit/${post.id}`}
+                      >
+                        <IconButton
+                          icon="edit"
+                          aria-label="edit post"
+                          color="lightpurple"
+                        ></IconButton>
+                      </NextLink>
+                      <IconButton
+                        ml="auto"
+                        icon="delete"
+                        aria-label="delete post"
+                        color="darkred"
+                        onClick={() => {
+                          deletePost({ id: post.id });
+                        }}
+                      ></IconButton>
+                    </Box>
                   </Flex>
                   <Text
                     color="gray.500"
