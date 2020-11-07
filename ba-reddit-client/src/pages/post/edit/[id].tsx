@@ -7,9 +7,23 @@ import { Formik, Form } from "formik";
 import InputField from "../../../components/inputField";
 import { Layout } from "../../../components/Layout";
 import { useGetPostFromUrl } from "../../../utils/useGetPostFromUrl";
+import {
+  usePostQuery,
+  useUpdatePostMutation,
+} from "../../../generated/graphql";
+import { Router, useRouter } from "next/router";
+import { useGetIntId } from "../../../utils/useGetIntId";
 
 const EditPost = ({}) => {
-  const [{ data, fetching }] = useGetPostFromUrl();
+  const router = useRouter();
+  const intId = useGetIntId();
+  const [{ data, fetching }] = usePostQuery({
+    pause: intId === -1,
+    variables: {
+      id: intId,
+    },
+  });
+  const [, updatePost] = useUpdatePostMutation();
 
   if (fetching) {
     return <Layout varient="regular">Loading...</Layout>;
@@ -28,6 +42,8 @@ const EditPost = ({}) => {
           //   if (!error) {
           //     router.push("/");
           //   }
+          await updatePost({ id: intId, ...values });
+          router.push("/");
         }}
       >
         {({ isSubmitting }) => (
