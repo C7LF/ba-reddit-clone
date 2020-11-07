@@ -13,6 +13,8 @@ import { User } from "./User";
 // user <-> posts
 // user -> upvotes <- posts
 
+// to cascade delete add onDelete: 'CASCADE' to many to one relationship
+
 @Entity()
 export class Upvote extends BaseEntity {
   @Column({ type: "int" })

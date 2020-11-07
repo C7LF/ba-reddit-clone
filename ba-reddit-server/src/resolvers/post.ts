@@ -216,6 +216,8 @@ export class PostResolver {
     // If post has upvotes remove posts from 
     await Upvote.delete({ postId: id });
     // can only delete posts that the user owns.
+    
+    // --- Above is not needed if cascasing on delete ---
     await Post.delete({ id, creatorId: req.session.userId });
     return true;
   }
