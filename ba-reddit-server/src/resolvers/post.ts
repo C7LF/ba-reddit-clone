@@ -188,14 +188,15 @@ export class PostResolver {
   @Mutation(() => Post, { nullable: true })
   async updatePost(
     @Arg("id") id: number,
-    @Arg("title", () => String, { nullable: true }) title: string
+    @Arg("title") title: string
+    @Arg("content") content: string
   ): Promise<Post | null> {
     const post = await Post.findOne(id);
     if (!post) {
       return null;
     }
     if (typeof title !== "undefined") {
-      Post.update({ id }, { title });
+      Post.update({ id }, { title, content });
     }
     return post;
   }
@@ -216,7 +217,7 @@ export class PostResolver {
     // If post has upvotes remove posts from 
     await Upvote.delete({ postId: id });
     // can only delete posts that the user owns.
-    
+
     // --- Above is not needed if cascasing on delete ---
     await Post.delete({ id, creatorId: req.session.userId });
     return true;
