@@ -3,7 +3,6 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import {
   useDeletePostMutation,
-  useMeQuery,
   usePostsQuery,
   useVoteMutation,
 } from "../generated/graphql";
@@ -12,7 +11,6 @@ import {
   Button,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Link,
   Spinner,
@@ -21,6 +19,7 @@ import {
 } from "@chakra-ui/core";
 import { Layout } from "../components/Layout";
 import NextLink from "next/link";
+import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 
 const Index = () => {
   const [, vote] = useVoteMutation();
@@ -31,7 +30,6 @@ const Index = () => {
     cursor: null as null | string,
   });
 
-  const [{ data: meData }] = useMeQuery();
   const [{ data, fetching }] = usePostsQuery({
     variables,
   });
@@ -97,27 +95,12 @@ const Index = () => {
                         <Heading fontSize="xl">{post.title}</Heading>
                       </Link>
                     </NextLink>
-                    { meData?.me?.id === post.creator.id && <Box ml="auto">
-                      <NextLink
-                        href="/post/edit/[id]"
-                        as={`/post/edit/${post.id}`}
-                      >
-                        <IconButton
-                          icon="edit"
-                          aria-label="edit post"
-                          color="lightpurple"
-                        ></IconButton>
-                      </NextLink>
-                      <IconButton
-                        ml="auto"
-                        icon="delete"
-                        aria-label="delete post"
-                        color="darkred"
-                        onClick={() => {
-                          deletePost({ id: post.id });
-                        }}
-                      ></IconButton>
-                    </Box>}
+                    <Box ml="auto">
+                      <EditDeletePostButtons
+                        id={post.id}
+                        creatorId={post.creator.id}
+                      />
+                    </Box>
                   </Flex>
                   <Text
                     color="gray.500"

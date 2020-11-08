@@ -6,12 +6,11 @@ import { Box, Button } from "@chakra-ui/core";
 import { Formik, Form } from "formik";
 import InputField from "../../../components/inputField";
 import { Layout } from "../../../components/Layout";
-import { useGetPostFromUrl } from "../../../utils/useGetPostFromUrl";
 import {
   usePostQuery,
   useUpdatePostMutation,
 } from "../../../generated/graphql";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useGetIntId } from "../../../utils/useGetIntId";
 
 const EditPost = ({}) => {
@@ -38,12 +37,8 @@ const EditPost = ({}) => {
       <Formik
         initialValues={{ title: data.post.title, content: data.post.content }}
         onSubmit={async (values) => {
-          //   const { error } = await createPost({ input: values });
-          //   if (!error) {
-          //     router.push("/");
-          //   }
           await updatePost({ id: intId, ...values });
-          router.push("/");
+          router.back();
         }}
       >
         {({ isSubmitting }) => (
