@@ -30,12 +30,12 @@ const Index = () => {
     cursor: null as null | string,
   });
 
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables,
   });
 
   if (!fetching && !data) {
-    return <div>Error, no posts loaded</div>;
+    return <div>Error, no posts loaded: {error}</div>;
   }
 
   return (

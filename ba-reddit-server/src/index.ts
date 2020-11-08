@@ -15,6 +15,7 @@ import { Post } from "./entities/Post";
 import { User } from "./entities/User";
 import path from "path";
 import { Upvote } from "./entities/Upvote";
+import { createUserLoader } from "./utils/createUserLoader";
 //rr
 const main = async () => {
   const conn = await createConnection({
@@ -68,7 +69,8 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ req, res, redis }),
+    // context runs on every request, so userLoader allows us to batch and cache the requests.
+    context: ({ req, res }) => ({ req, res, redis, userLoader: createUserLoader() }),
   });
 
   apolloServer.applyMiddleware({
