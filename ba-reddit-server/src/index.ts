@@ -16,6 +16,7 @@ import { User } from "./entities/User";
 import path from "path";
 import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
+import { createUpvoteLoader } from "./utils/createUpvoteLoader";
 //rr
 const main = async () => {
   const conn = await createConnection({
@@ -24,16 +25,16 @@ const main = async () => {
     username: "postgres",
     password: "postgres",
     logging: true,
-    cache:false,
+    cache: false,
     synchronize: true,
-    migrations: [path.join(__dirname, './migrations/*')],
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Upvote],
   });
 
   await conn.runMigrations();
-  console.log(conn.migrations)
+  console.log(conn.migrations);
 
- //await Post.delete({})
+  //await Post.delete({})
 
   const app = express();
 
@@ -70,7 +71,13 @@ const main = async () => {
       validate: false,
     }),
     // context runs on every request, so userLoader allows us to batch and cache the requests.
-    context: ({ req, res }) => ({ req, res, redis, userLoader: createUserLoader() }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      userLoader: createUserLoader(),
+      upvoteLoader: createUpvoteLoader(),
+    }),
   });
 
   apolloServer.applyMiddleware({
@@ -79,7 +86,7 @@ const main = async () => {
   });
 
   app.listen(4000, () => {
-    console.log("server started on localhost:4000")
+    console.log("server started on localhost:4000");
   });
 };
 
