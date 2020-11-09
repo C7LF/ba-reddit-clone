@@ -3,21 +3,13 @@ import { Box, Heading, Flex, Text, Button, Link } from "@chakra-ui/core";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
-import { useRouter } from "next/router";
 
 interface MenuItems {
   children: any;
   onClick?: () => void;
 }
 
-const MenuItems = ({ children, onClick }: MenuItems) => (
-  <Text onClick={onClick} mt={{ base: 4, md: 0 }} mr={6} display="block">
-    {children}
-  </Text>
-);
-
 const NavBar = (props: any) => {
-  const router = useRouter();
   const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     // stop quering if on the server, but run on the client, prevent unnecessary requests
@@ -68,14 +60,7 @@ const NavBar = (props: any) => {
       <Box display={data?.me ? "flex" : "none"}>
         <MenuItems>{data?.me?.username}</MenuItems>
         <Link>
-          <MenuItems
-            onClick={async () => {
-              await logout();
-              router.reload();
-            }}
-          >
-            Logout
-          </MenuItems>
+          <MenuItems onClick={() => logout()}>Logout</MenuItems>
         </Link>
       </Box>
 
@@ -102,5 +87,11 @@ const NavBar = (props: any) => {
     </Flex>
   );
 };
+
+const MenuItems = ({ children, onClick }: MenuItems) => (
+  <Text onClick={onClick} mt={{ base: 4, md: 0 }} mr={6} display="block">
+    {children}
+  </Text>
+);
 
 export default NavBar;
