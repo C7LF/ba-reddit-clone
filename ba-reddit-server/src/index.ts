@@ -17,7 +17,7 @@ import path from "path";
 import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpvoteLoader } from "./utils/createUpvoteLoader";
-//rr
+
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
