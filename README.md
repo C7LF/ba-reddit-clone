@@ -8,7 +8,9 @@ Full stack reddit clone built using Nextjs, Graphql, TypeORM, Redis and Postgres
 Postgres and Redis installed and running  on the local machine.
 
 1). Run `npm install` in both the server and client projects
-2). Add database credentials into `createConnection` function
+
+2). Add database credentials into `createConnection` function object
+
 3). Run `npm run dev` in the server and client directory
 
 **Notes:**
